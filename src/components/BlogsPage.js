@@ -3,6 +3,8 @@ import React, { useState, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { removeBlog } from '../features/blog/blogSlice';
 import { Header } from './Header';
+import Cookies from 'js-cookie';
+import Signup from './Signup';
 
 const BlogsPage = () => {
     const dispatch = useDispatch();
@@ -16,14 +18,23 @@ const BlogsPage = () => {
     useEffect(() => {
         const storedBlogs = JSON.parse(localStorage.getItem('blogs')) || [];
         const userList = JSON.parse(localStorage.getItem('userList')) || [];
+        console.log("hhgfgfg",storedBlogs)
+            console.log("sfdff", userList)
 
         const updatedBlogs = storedBlogs.map(blog => {
-            const authorName = getUserById(userList, blog.author)?.name || 'Taran';
+            console.log("fsdffsfffsffsfsfs",blog)
+            console.log("yyyyy", blog.id)
+            const author = userList.find(user => user.id === blog.id);
+            console.log("fsfsfs", author)
+            const authorName = author ? author.name: 'unknown user'; 
             return { ...blog, author: authorName };
         });
 
         setBlogs(updatedBlogs);
     }, []);
+    
+
+    
 
     const getUserById = (userList, userId) => {
         return userList.find(user => user.id === userId);
@@ -55,12 +66,17 @@ const BlogsPage = () => {
                 };
             }
             return blog;
+
+
         });
 
         localStorage.setItem('blogs', JSON.stringify(updatedBlogs));
         setBlogs(updatedBlogs);
         setEditingBlogId(null);
+
     };
+
+
 
     const handleCancelEdit = () => {
         setEditingBlogId(null);
@@ -90,9 +106,11 @@ const BlogsPage = () => {
                             </tr>
                         </thead>
                         <tbody>
-                            {blogs.map((blog) => (
+                            {blogs.filter(val => val.id === 1).map((blog) => (
                                 <tr key={blog.id}>
+                                {console.log(blog, "gghhhhhhhh")}
                                     <td className="border border-gray-800 px-4 py-2">{editingBlogId === blog.id ? <input type="text" value={editedTitle} onChange={(e) => setEditedTitle(e.target.value)} /> : blog.title}</td>
+                                    {console.log(editingBlogId, "jknbkhnkhnk")}
                                     <td className="border border-gray-800 px-4 py-2">
                                         {editingBlogId === blog.id ? (
                                             <textarea value={editedContent} onChange={(e) => setEditedContent(e.target.value)} />

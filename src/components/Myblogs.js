@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Header } from './Header';
 import { useDispatch } from 'react-redux';
 import { addBlog } from '../features/blog/blogSlice';
@@ -11,6 +11,19 @@ export const Myblogs = () => {
     const [title, setTitle] = useState('');
     const [content, setContent] = useState('');
     const [error, setError] = useState('');
+    const [nextId, setNextId] = useState(1);
+
+    // UseEffect to update nextId when adding a new blog
+    useEffect(() => {
+        // Get existing blogs from localStorage or initialize empty array
+        const existingBlogs = JSON.parse(localStorage.getItem('blogs')) || [];
+        console.log("fsfggggg", existingBlogs) 
+        // Get the highest ID from existing blogs
+        const maxId = existingBlogs.reduce((max, blog) => (blog.id > max ? blog.id : max), 0);
+        console.log("ttttttt", maxId)
+        // Set the nextId to the highest ID + 1
+        setNextId(maxId + 1);
+    }, []);
 
     const handleTitle = (e) => {
         setTitle(e.target.value);
@@ -26,9 +39,13 @@ export const Myblogs = () => {
             return;
         }
 
-        const newBlog = { id: Math.random(), title, content };
-        dispatch(addBlog(newBlog));
+        const newBlog = { id: nextId, title, content };
         
+        dispatch(addBlog(newBlog));
+
+        // Increment ID for the next blog post
+        setNextId(nextId + 1);
+
         // Get existing blogs from localStorage or initialize empty array
         const existingBlogs = JSON.parse(localStorage.getItem('blogs')) || [];
         // Add the new blog to the existing blogs

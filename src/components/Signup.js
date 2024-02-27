@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Header } from './Header';
 import { ToastContainer, toast } from 'react-toastify';
@@ -9,58 +9,59 @@ export const Signup = () => {
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [lastUserId, setLastUserId] = useState(0);
 
+    // Load existing user data from localStorage on component mount
+    useEffect(() => {
+        const existingUserData = JSON.parse(localStorage.getItem('userList')) || [];
+        if (existingUserData?.length > 0) {
+            // Find the highest id among existing users
+            const maxId = Math.max(...existingUserData.map(user => user.id));
+            setLastUserId(maxId);
+        }
+    }, []);
+
+    // Function to handle signup
     const handleSignup = () => {
-
         if (!name.trim() || !email.trim() || !password.trim()) {
             toast.error("Please fill out all fields");
             return;
         }
-    
-        // Check if the email is in a valid format
+
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         if (!emailRegex.test(email)) {
             toast.error("Please enter a valid email address");
             return;
         }
 
-        
-        // Generate unique id
-        const userId = Date.now(); // You can use a more robust method to generate unique ids
-    
-        // Create user data object
+        // Increment the lastUserId for each new user
+        const userId = lastUserId + 1;
+        setLastUserId(userId);
+
         const userList = {
             id: userId,
             name,
             email,
             password
         };
-    
-        // Retrieve existing user data array from local storage or create an empty array if none exists
+
         const existingUserData = JSON.parse(localStorage.getItem('userList')) || [];
-    
-        // Push new user data into the array
         existingUserData.push(userList);
-    
-        // Store updated user data array in local storage
+
         localStorage.setItem('userList', JSON.stringify(existingUserData));
-    
-        // Reset form fields
+
         setName('');
         setEmail('');
         setPassword('');
-    
-        // Show success toast
+
         toast.success("Sign up successful!", {
             position: "top-right",
             hideProgressBar: true,
             autoClose: 5000,
         });
-    
-        // Redirect to login page after signup
+
         navigate('/login');
     };
-    
 
     return (
         <>
@@ -104,9 +105,8 @@ export const Signup = () => {
                         onClick={handleSignup}
                     >
                         Sign Up
-                    <ToastContainer />
-
                     </button>
+                    <ToastContainer />
                     <div className="mt-4 text-center">
                         <span className="text-gray-500">Already have an account? </span>
                         <Link to="/login" className="text-blue-600 hover:underline">Log In</Link>
@@ -116,3 +116,5 @@ export const Signup = () => {
         </>
     );
 };
+
+export default Signup;

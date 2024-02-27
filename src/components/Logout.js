@@ -13,8 +13,8 @@ const Logout = () => {
             console.log('User data removed from cookies');
 
             // Redirect to the login page
-            navigate('/login');
-            console.log('Navigated to /login');
+            navigate('/loign');
+            console.log(navigate('/login'), "fsffffffdffsfsffsdfsf");
         } catch (error) {
             console.error('Error occurred during logout:', error);
         }
