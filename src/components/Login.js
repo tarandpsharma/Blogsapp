@@ -5,12 +5,14 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Cookies from 'js-cookie';
 import { encode } from 'base-64';
-
+import { useDispatch } from 'react-redux';
+import { setUser } from '../features/userSlice';
 
 export const Login = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const navigate = useNavigate();
+    const dispatch = useDispatch();
 
     const handleLogin = () => {
         const storedUserData = JSON.parse(localStorage.getItem('userList')); 
@@ -39,8 +41,8 @@ export const Login = () => {
 
                 Cookies.set('userData', encodedUserData, { expires: 30 });
 
-
-                console.log(userDataToStore, "fdsfsfsfs")
+                // Dispatch action to store user data in Redux store
+                dispatch(setUser(userDataToStore));
     
                 return;
             }
@@ -49,8 +51,6 @@ export const Login = () => {
         // Incorrect credentials or user not found, show error message
         toast.error("Email or password is invalid.");
     };
-    
-    
 
     const handleEmail = (e) => {
         setEmail(e.target.value);
@@ -102,5 +102,7 @@ export const Login = () => {
                 </form>
             </div>
         </>
-    )
-}
+    );
+};
+
+export default Login;

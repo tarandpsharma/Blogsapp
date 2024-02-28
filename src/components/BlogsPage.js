@@ -19,7 +19,7 @@ const BlogsPage = () => {
         const storedBlogs = JSON.parse(localStorage.getItem('blogs')) || [];
         const userList = JSON.parse(localStorage.getItem('userList')) || [];
         console.log("hhgfgfg",storedBlogs)
-            console.log("sfdff", userList)
+        console.log("sfdff", userList)
 
         const updatedBlogs = storedBlogs.map(blog => {
             console.log("fsdffsfffsffsfsfs",blog)
@@ -36,9 +36,11 @@ const BlogsPage = () => {
 
     
 
-    const getUserById = (userList, userId) => {
-        return userList.find(user => user.id === userId);
-    };
+    // const getUserById = (userList, userId) => {
+    //     console.log(getUserById, "vvvvvvvv")
+
+    //     return userList.find(user => user.id === userId);
+    // };
 
     const handleDelete = (id) => {
         const updatedBlogs = blogs.filter(blog => blog.id !== id);
@@ -94,7 +96,7 @@ const BlogsPage = () => {
         <>
             <Header />
             <div className="max-w-3xl mx-auto mt-20">
-                <h2 className="text-3xl font-semibold mb-4 text-center">All Blogs</h2>
+                <h2 className="text-3xl font-semibold mb-4 text-center">My Blogs</h2>
                 <div className="overflow-x-auto">
                     <table className="table-auto border-collapse border border-gray-800">
                         <thead>
@@ -106,7 +108,7 @@ const BlogsPage = () => {
                             </tr>
                         </thead>
                         <tbody>
-                            {blogs.filter(val => val.id === 1).map((blog) => (
+                            {blogs.map((blog) => (
                                 <tr key={blog.id}>
                                 {console.log(blog, "gghhhhhhhh")}
                                     <td className="border border-gray-800 px-4 py-2">{editingBlogId === blog.id ? <input type="text" value={editedTitle} onChange={(e) => setEditedTitle(e.target.value)} /> : blog.title}</td>

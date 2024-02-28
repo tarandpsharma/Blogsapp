@@ -1,27 +1,19 @@
-import React, { useState, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { addUser, selectLastUserId } from '../features/blog/userSlice';
 import { Header } from './Header';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 export const Signup = () => {
-    const navigate = useNavigate();
+    const dispatch = useDispatch();
+    const lastUserId = useSelector(selectLastUserId);
+
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const [lastUserId, setLastUserId] = useState(0);
 
-    // Load existing user data from localStorage on component mount
-    useEffect(() => {
-        const existingUserData = JSON.parse(localStorage.getItem('userList')) || [];
-        if (existingUserData?.length > 0) {
-            // Find the highest id among existing users
-            const maxId = Math.max(...existingUserData.map(user => user.id));
-            setLastUserId(maxId);
-        }
-    }, []);
-
-    // Function to handle signup
     const handleSignup = () => {
         if (!name.trim() || !email.trim() || !password.trim()) {
             toast.error("Please fill out all fields");
@@ -34,21 +26,8 @@ export const Signup = () => {
             return;
         }
 
-        // Increment the lastUserId for each new user
         const userId = lastUserId + 1;
-        setLastUserId(userId);
-
-        const userList = {
-            id: userId,
-            name,
-            email,
-            password
-        };
-
-        const existingUserData = JSON.parse(localStorage.getItem('userList')) || [];
-        existingUserData.push(userList);
-
-        localStorage.setItem('userList', JSON.stringify(existingUserData));
+        dispatch(addUser({ id: userId, name, email, password }));
 
         setName('');
         setEmail('');
@@ -59,8 +38,6 @@ export const Signup = () => {
             hideProgressBar: true,
             autoClose: 5000,
         });
-
-        navigate('/login');
     };
 
     return (
