@@ -19,6 +19,7 @@ const BlogsPage = () => {
         console.log('activeUserDetail>>>>>>>>>>>>>>>>>', activeUserDetail);
 
         console.log(arr, "arrrrrrrrrrr")
+        
         if(activeUserDetail){
         setBlogPost(arr);}
 

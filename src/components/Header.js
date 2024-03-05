@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import Cookies from 'js-cookie';
 import { decode } from 'base-64';
+import { Profile } from './profileUser/Profile';
 
 export const Header = () => {
     const location = useLocation();
