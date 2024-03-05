@@ -6,7 +6,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import Cookies from 'js-cookie';
 import { encode } from 'base-64';
 import { useDispatch } from 'react-redux';
-import { setUser } from '../features/userSlice';
+// import { setUser } from '../features/blog/userSlice';
 
 export const Login = () => {
     const [email, setEmail] = useState('');
@@ -42,7 +42,7 @@ export const Login = () => {
                 Cookies.set('userData', encodedUserData, { expires: 30 });
 
                 // Dispatch action to store user data in Redux store
-                dispatch(setUser(userDataToStore));
+                // dispatch(setUser(userDataToStore));
     
                 return;
             }
