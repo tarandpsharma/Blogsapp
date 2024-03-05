@@ -6,8 +6,8 @@ import 'react-toastify/dist/ReactToastify.css';
 import Cookies from 'js-cookie';
 import { encode } from 'base-64';
 import { useDispatch } from 'react-redux';
-// import { setUser } from '../features/blog/userSlice';
-
+import { setActiveUser } from '../features/blog/userSlice';
+// import { setUser } from '../features/blog/userSlice'
 export const Login = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
@@ -15,14 +15,15 @@ export const Login = () => {
     const dispatch = useDispatch();
 
     const handleLogin = () => {
-        const storedUserData = JSON.parse(localStorage.getItem('userList')); 
-    
+        const storedUserData = JSON.parse(localStorage.getItem('userList'));  
         // Check if storedUserData exists and is an array
         if (Array.isArray(storedUserData)) {
             // Find the user object with matching email
-            const user = storedUserData.find(user => user.email === email);
+            const user = storedUserData.find(user => user?.email === email);
+            console.log(user, "userrrrr")
             if (user && user.password === password) {
                 // Correct credentials, navigate to home page
+               dispatch( setActiveUser(user));
                 navigate('/home');
                 toast.success("Login Successful!", {
                     position: "top-right",
@@ -32,10 +33,12 @@ export const Login = () => {
     
                 // Save necessary user data in cookies
                 const userDataToStore = {
-                    id: user.id, // Assuming user has an id
-                    email: user.email, // Storing email for identification purposes
-                    // You can add more necessary information here
+                    id: user.id,
+                    email: user.email, 
+                    
                 };
+                console.log(userDataToStore, "  jjhjjj")
+
 
                 const encodedUserData = encode(JSON.stringify(userDataToStore));
 
@@ -52,13 +55,9 @@ export const Login = () => {
         toast.error("Email or password is invalid.");
     };
 
-    const handleEmail = (e) => {
-        setEmail(e.target.value);
-    };
-
-    const handlePassword = (e) => {
-        setPassword(e.target.value);
-    };
+    const handleEmail = e => setEmail(e.target.value);
+    const handlePassword = e => setPassword(e.target.value);
+    
 
     return (
         <>

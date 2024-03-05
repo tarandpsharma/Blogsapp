@@ -1,11 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-// import  Image  from './Image';
 import Cookies from 'js-cookie';
 import { decode } from 'base-64';
-import Img  from '../../src/nature.jpg';
-import Blog from './Blog';
-
 
 export const Header = () => {
     const location = useLocation();
@@ -13,7 +9,7 @@ export const Header = () => {
     const [showDropdown, setShowDropdown] = useState(false);
     const [userName, setUserName] = useState('');
     const [blogs, setBlogs] = useState([]);
-    const [selectedBlog, setSelectedBlog] = useState(null);
+    console.log(blogs, "bbbbbllllllgggsssss")
 
     useEffect(() => {
         const checkLoggedIn = () => {
@@ -21,7 +17,6 @@ export const Header = () => {
             if (userData) {
                 const decodedUserData = decode(userData);
                 const parsedUserData = JSON.parse(decodedUserData);
-                console.log("mmmmmm", parsedUserData)
                 setUserName(parsedUserData.email);
                 setIsLoggedIn(true);
             } else {
@@ -29,20 +24,11 @@ export const Header = () => {
             }
         };
 
-        checkLoggedIn(); 
+        checkLoggedIn();
 
         // Fetch blogs from local storage
         const storedBlogs = JSON.parse(localStorage.getItem('blogs')) || [];
-        const userList = JSON.parse(localStorage.getItem('userList')) || [];
-
-        const updatedBlogs = storedBlogs.map(blog => {
-            const author = userList.find(user => user.id === blog.id);
-            const authorName = author ? author.name : 'Unknown Author';
-            console.log(author, "sdffsf")
-            return { ...blog, author: authorName };
-        });
-
-        setBlogs(updatedBlogs);
+        setBlogs(storedBlogs)
     }, []);
 
     const handleDropdownToggle = () => {
@@ -55,15 +41,11 @@ export const Header = () => {
         setShowDropdown(false);
     };
 
-    const handleBlogClick = (blog) => {
-        setSelectedBlog(blog);
-    };
-
     return (
         <div>
-            <nav className="bg-white dark:bg-gray-900 fixed w-full z-20 top-0 start-0 border-b border-gray-200 dark:border-gray-600">
-                <div className="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
-                    <span className="self-center text-2xl font-semibold whitespace-nowrap dark:text-white"> TDS Blogs</span>
+            <nav className="bg-white dark:bg-black fixed w-full z-20 top-0 start-0 border-b border-gray-200">
+                <div className="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-2">
+                    <span className="self-center text-2xl font-semibold whitespace-nowrap dark:text-white"> TD BLOGS</span>
                     <div className="flex md:order-2 space-x-3 md:space-x-0 rtl:space-x-reverse">
                         {isLoggedIn ? (
                             <div className="relative">
@@ -115,15 +97,18 @@ export const Header = () => {
                                 Login
                             </Link>
                         )}
+
+                        {isLoggedIn && (
                         <Link
                             to="/myblogs"
                             className={`block py-2 px-2 font-bold rounded-lg text-sm  md:text-white md:bg-blue-600  md:border-blue-600 `}
                         >
-                            Create
+                            Create +
                         </Link>
+                        )}
                     </div>
                     <div className="items-center justify-between hidden w-full md:flex md:w-auto md:order-1" id="navbar-sticky">
-                        <ul className="flex flex-col p-4 md:p-0 mt-4 font-medium border border-gray-100 rounded-lg bg-gray-50 md:space-x-8 rtl:space-x-reverse md:flex-row md:mt-0 md:border-0 md:bg-white dark:bg-gray-800 md:dark:bg-gray-900 dark:border-gray-700">
+                        <ul className="flex flex-col p-4 md:p-0 mt-4 font-medium border border-gray-100 rounded-lg bg-gray-50 md:space-x-8 rtl:space-x-reverse md:flex-row md:mt-0 md:border-0  dark:bg-black ">
                             <li>
                                 <Link
                                     to="/home"
@@ -141,43 +126,46 @@ export const Header = () => {
                                 </Link>
                             </li>
                             <li>
+                            {isLoggedIn && (
                                 <Link
                                     to="/blogs"
                                     className={`block py-2 px-3 rounded md:bg-transparent ${location.pathname === '/allblogs' ? 'bg-blue-700 text-white' : 'text-gray-900 hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:dark:hover:text-blue-500 dark:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700'}`}
                                 >
                                     My Blogs
                                 </Link>
+                                )}
                             </li>
                         </ul>
                     </div>
                 </div>
             </nav>
-            {selectedBlog && (
-                <Blog blog={selectedBlog} />
-            )}
-            
+
             {location.pathname === '/home' || location.pathname === '/' ? (
                 <div className="container mx-auto px-4 py-8 mt-20">
-                    <h1 className="text-3xl font-bold mb-4">Latest Blogs</h1>
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                        {blogs.map(blog => (
-                            <div key={blog.home} className="bg-white rounded-lg shadow-lg" onClick={() => handleBlogClick(blog)}>
-                                <img
-                                    className="w-full h-40 object-cover rounded-t-lg"
-                                    src={Img}
-                                    alt={blog.title}
-                                />
-                                <div className="p-4">
-                                    <h2 className="text-lg font-semibold">{blog.title}</h2>
-                                    <p className="text-gray-600 mb-2">Author: {blog.author}</p>
-                                    <p className="text-gray-700">{blog.content}</p>
+                    {blogs && blogs.length > 0 ? (
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                            {blogs.map(blog => (
+                                <div key={blog?.id} className="bg-white rounded-lg shadow-lg">
+                                    <img
+                                        className="w-full h-60 object-cover rounded-t-lg"
+                                        src={blog.image} 
+                                        alt={blog.title}
+                                    />
+                                    <div className="p-4">
+                                        <h2 className="text-lg font-semibold">{blog?.title}</h2>
+                                        <p className="text-gray-600 mb-2">Author: {blog?.author || blog?.authorname}</p>
+                                        <p className="text-gray-700">{blog?.content}</p>
+                                    </div>
                                 </div>
-                            </div>
-                        ))}
-                    </div>
+                            ))}
+                        </div>
+                    ) : (
+                        <p className="font-bold text-3xl text-center text-gray-600 mt-4"> There are no blogs.</p>
+                    )}
                 </div>
             ) : null}
         </div>
+        
     );
 };
 

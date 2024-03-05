@@ -1,14 +1,12 @@
-// BlogsPage.js
 import React, { useState, useEffect } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { removeBlog } from '../features/blog/blogSlice';
 import { Header } from './Header';
-import Cookies from 'js-cookie';
-import Signup from './Signup';
 
 const BlogsPage = () => {
     const dispatch = useDispatch();
-    const [blogs, setBlogs] = useState([]);
+    const { activeUserDetail } = useSelector(state => state?.user);
+    const [blogPost, setBlogPost] = useState([]);
     const [editingBlogId, setEditingBlogId] = useState(null);
     const [editedTitle, setEditedTitle] = useState('');
     const [editedContent, setEditedContent] = useState('');
@@ -17,40 +15,26 @@ const BlogsPage = () => {
 
     useEffect(() => {
         const storedBlogs = JSON.parse(localStorage.getItem('blogs')) || [];
-        const userList = JSON.parse(localStorage.getItem('userList')) || [];
-        console.log("hhgfgfg",storedBlogs)
-        console.log("sfdff", userList)
+        const arr = storedBlogs?.filter(val => val?.userId === activeUserDetail?.id);
+        console.log('activeUserDetail>>>>>>>>>>>>>>>>>', activeUserDetail);
 
-        const updatedBlogs = storedBlogs.map(blog => {
-            console.log("fsdffsfffsffsfsfs",blog)
-            console.log("yyyyy", blog.id)
-            const author = userList.find(user => user.id === blog.id);
-            console.log("fsfsfs", author)
-            const authorName = author ? author.name: 'unknown user'; 
-            return { ...blog, author: authorName };
-        });
+        console.log(arr, "arrrrrrrrrrr")
+        if(activeUserDetail){
+        setBlogPost(arr);}
 
-        setBlogs(updatedBlogs);
-    }, []);
-    
+    }, [activeUserDetail?.id]);
 
-    
 
-    // const getUserById = (userList, userId) => {
-    //     console.log(getUserById, "vvvvvvvv")
-
-    //     return userList.find(user => user.id === userId);
-    // };
 
     const handleDelete = (id) => {
-        const updatedBlogs = blogs.filter(blog => blog.id !== id);
+        const updatedBlogs = blogPost.filter(blog => blog?.id !== id);
         localStorage.setItem('blogs', JSON.stringify(updatedBlogs));
-        setBlogs(updatedBlogs);
+        setBlogPost(updatedBlogs);
         dispatch(removeBlog(id));
     };
 
     const handleEdit = (blogId) => {
-        const blogToEdit = blogs.find(blog => blog.id === blogId);
+        const blogToEdit = blogPost.find(blog => blog?.id === blogId);
         setEditingBlogId(blogId);
         setEditedTitle(blogToEdit.title);
         setEditedContent(blogToEdit.content);
@@ -58,8 +42,8 @@ const BlogsPage = () => {
     };
 
     const handleSaveEdit = () => {
-        const updatedBlogs = blogs.map(blog => {
-            if (blog.id === editingBlogId) {
+        const updatedBlogs = blogPost.map(blog => {
+            if (blog?.id === editingBlogId) {
                 return {
                     ...blog,
                     title: editedTitle,
@@ -68,17 +52,12 @@ const BlogsPage = () => {
                 };
             }
             return blog;
-
-
         });
 
         localStorage.setItem('blogs', JSON.stringify(updatedBlogs));
-        setBlogs(updatedBlogs);
+        setBlogPost(updatedBlogs);
         setEditingBlogId(null);
-
     };
-
-
 
     const handleCancelEdit = () => {
         setEditingBlogId(null);
@@ -91,6 +70,15 @@ const BlogsPage = () => {
     const isBlogExpanded = (blogId) => {
         return expandedBlogId === blogId;
     };
+
+    const handleTitleChange = (e) => {
+        setEditedTitle(e.target.value);
+    };
+
+    const handleContentChange = (e) => {
+        setEditedContent(e.target.value);
+    };
+
 
     return (
         <>
@@ -108,37 +96,50 @@ const BlogsPage = () => {
                             </tr>
                         </thead>
                         <tbody>
-                            {blogs.map((blog) => (
-                                <tr key={blog.id}>
-                                {console.log(blog, "gghhhhhhhh")}
-                                    <td className="border border-gray-800 px-4 py-2">{editingBlogId === blog.id ? <input type="text" value={editedTitle} onChange={(e) => setEditedTitle(e.target.value)} /> : blog.title}</td>
-                                    {console.log(editingBlogId, "jknbkhnkhnk")}
+                            {blogPost?.map((blog) => (
+                                <tr key={blog?.id}>
                                     <td className="border border-gray-800 px-4 py-2">
-                                        {editingBlogId === blog.id ? (
-                                            <textarea value={editedContent} onChange={(e) => setEditedContent(e.target.value)} />
+                                        {editingBlogId === blog?.id ? (
+                                            <input
+                                                type="text"
+                                                value={editedTitle}
+                                                onChange={handleTitleChange}
+                                                className="w-full border rounded-md px-2 py-1 focus:outline-none focus:border-blue-500"
+                                            />
+                                        ) : (
+                                            blog.title
+                                        )}
+                                    </td>
+                                    <td className="border border-gray-800 px-4 py-2">
+                                        {editingBlogId === blog?.id ? (
+                                            <textarea
+                                                value={editedContent}
+                                                onChange={handleContentChange}
+                                                className="w-full border rounded-md px-2 py-1 focus:outline-none focus:border-blue-500"
+                                            />
                                         ) : (
                                             <>
-                                                {isBlogExpanded(blog.id) ? blog.content : `${blog.content.substring(0, 100)}...`}
+                                                {isBlogExpanded(blog?.id) ? blog.content : `${blog.content.substring(0, 100)}...`}
                                                 <button
                                                     className="text-blue-500 hover:underline ml-2"
-                                                    onClick={() => handleToggleExpand(blog.id)}
+                                                    onClick={() => handleToggleExpand(blog?.id)}
                                                 >
-                                                    {isBlogExpanded(blog.id) ? 'Read Less' : 'Read More'}
+                                                    {isBlogExpanded(blog?.id) ? 'Read Less' : 'Read More'}
                                                 </button>
                                             </>
                                         )}
                                     </td>
-                                    <td className="border border-gray-800 px-4 py-2">{blog.author}</td>
+                                    <td className="border border-gray-800 px-4 py-2">{blog?.authorname}</td>
                                     <td className="border border-gray-800 px-4 py-2">
-                                        {editingBlogId === blog.id ? (
+                                        {editingBlogId === blog?.id ? (
                                             <>
                                                 <button className="bg-green-500 text-white px-3 py-1 mr-2" onClick={handleSaveEdit}>Save</button>
                                                 <button className="bg-gray-500 text-white px-3 py-1" onClick={handleCancelEdit}>Cancel</button>
                                             </>
                                         ) : (
-                                            <button className="bg-blue-500 text-white px-3 py-1 mr-2" onClick={() => handleEdit(blog.id)}>Edit</button>
+                                            <button className="bg-blue-500 text-white px-3 py-1 mr-2" onClick={() => handleEdit(blog?.id)}>Edit</button>
                                         )}
-                                        <button className="bg-red-500 text-white px-3 py-1" onClick={() => handleDelete(blog.id)}>Delete</button>
+                                        <button className="bg-red-500 text-white px-3 py-1" onClick={() => handleDelete(blog?.id)}>Delete</button>
                                     </td>
                                 </tr>
                             ))}

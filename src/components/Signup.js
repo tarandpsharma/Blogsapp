@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { addUser, selectLastUserId } from '../features/blog/userSlice';
 import { Header } from './Header';
@@ -13,6 +13,7 @@ export const Signup = () => {
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const navigate = useNavigate();
 
     const handleSignup = () => {
         if (!name.trim() || !email.trim() || !password.trim()) {
@@ -29,6 +30,11 @@ export const Signup = () => {
         const userId = lastUserId + 1;
         dispatch(addUser({ id: userId, name, email, password }));
 
+        const userData = { id: userId, name, email, password };
+        const existingUsers = JSON.parse(localStorage.getItem('userList')) || [];
+        const updatedUsers = [...existingUsers, userData];
+        localStorage.setItem('userList', JSON.stringify(updatedUsers));
+
         setName('');
         setEmail('');
         setPassword('');
@@ -38,6 +44,8 @@ export const Signup = () => {
             hideProgressBar: true,
             autoClose: 5000,
         });
+
+        navigate('/login')
     };
 
     return (

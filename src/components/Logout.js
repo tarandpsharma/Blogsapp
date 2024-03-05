@@ -13,15 +13,14 @@ const Logout = () => {
             console.log('User data removed from cookies');
 
             // Redirect to the login page
-            navigate('/loign');
-            console.log(navigate('/login'), "fsffffffdffsfsffsdfsf");
+            navigate('/login');
         } catch (error) {
             console.error('Error occurred during logout:', error);
         }
     };
 
     return (
-        <button onClick={handleLogout}>Logout</button>
+        <button onClick={handleLogout}> Logout </button>
     );
 };
 

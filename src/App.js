@@ -6,7 +6,6 @@ import { Login } from './components/Login';
 import { Signup } from './components/Signup';
 import { Myblogs } from './components/Myblogs';
 import BlogsPage from './components/BlogsPage';
-import Logout from './components/Logout';
 
 const App = () => {
 
@@ -22,7 +21,6 @@ const App = () => {
           <Route path='/signup' element={<Signup />} />
           <Route path='/myblogs/*' element={<Myblogs />} />
           <Route path='/blogs' element={<BlogsPage />} />
-          <Route path='/logout' element={<Logout />} />
         </Routes>
       </BrowserRouter>
     
