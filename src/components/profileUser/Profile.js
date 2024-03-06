@@ -6,7 +6,7 @@ export const Profile = () => {
     const { activeUserDetail } = useSelector(state => state.user);
     const [profileImage, setProfileImage] = useState(localStorage.getItem('profileImage') || null);
     const [editableName, setEditableName] = useState(localStorage.getItem('userName') || (activeUserDetail ? activeUserDetail.name : ''));
-    console.log("editnamemmmmmm",editableName)
+    const [isEditingName, setIsEditingName] = useState(false);
 
     const handleImageChange = (e) => {
         const file = e.target.files[0];
@@ -31,6 +31,11 @@ export const Profile = () => {
 
     const handleSaveName = () => {
         localStorage.setItem('userName', editableName);
+        setIsEditingName(false);
+    };
+
+    const handleEditName = () => {
+        setIsEditingName(true);
     };
 
     return (
@@ -67,18 +72,33 @@ export const Profile = () => {
                     <div className="mt-4">
                         <label className="text-md font-bold text-gray-600">Name:</label>
                         <div className="flex items-center">
-                            <input
-                                type="text"
-                                className="mt-1 bg-transparent"
-                                value={editableName}
-                                onChange={handleNameChange}
-                            />
-                            <button
-                                className="ml-2 px-3 mt-1 py-0 font-bold bg-blue-500 text-white rounded-md"
-                                onClick={handleSaveName}
-                            >
-                                Save
-                            </button>
+                            {isEditingName ? (
+                                <input
+                                    type="text"
+                                    className="mt-1 bg-transparent"
+                                    value={editableName}
+                                    onChange={handleNameChange}
+                                    autoFocus
+                                />
+                            ) : (
+                                <div className="flex items-center">
+                                    <span className="mr-2">{editableName}</span>
+                                    <a href='#'
+                                        className="text-blue-900 underline"
+                                        onClick={handleEditName}
+                                    >
+                                        Edit
+                                    </a>
+                                </div>
+                            )}
+                            {isEditingName && (
+                                <button
+                                    className="ml-2 px-3 py-1 font-bold bg-blue-500 text-white rounded-md"
+                                    onClick={handleSaveName}
+                                >
+                                    Save
+                                </button>
+                            )}
                         </div>
                     </div>
                     {activeUserDetail && (
