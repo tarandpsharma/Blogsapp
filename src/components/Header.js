@@ -100,12 +100,12 @@ export const Header = () => {
                         )}
 
                         {isLoggedIn && (
-                        <Link
-                            to="/myblogs"
-                            className={`block py-2 px-2 font-bold rounded-lg text-sm  md:text-white md:bg-blue-600  md:border-blue-600 `}
-                        >
-                            Create +
-                        </Link>
+                            <Link
+                                to="/myblogs"
+                                className={`block py-2 px-2 font-bold rounded-lg text-sm  md:text-white md:bg-blue-600  md:border-blue-600 `}
+                            >
+                                Create +
+                            </Link>
                         )}
                     </div>
                     <div className="items-center justify-between hidden w-full md:flex md:w-auto md:order-1" id="navbar-sticky">
@@ -113,7 +113,7 @@ export const Header = () => {
                             <li>
                                 <Link
                                     to="/home"
-                                    className={`mt-2 block py-2 px-3 rounded md:bg-transparent md:text-blue-700 md:p-0 md:dark:text-blue-500 ${location.pathname === '/home' || location.pathname === '/' ? 'bg-blue-700 text-white' : 'text-gray-900 hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:dark:hover:text-blue-500 dark:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700'}`}
+                                    className={`mt-2 block py-2 px-3 rounded md:bg-transparent md:text-blue-700 md:p-0  ${location.pathname === '/home' || location.pathname === '/' ? 'bg-blue-700 text-white' : 'text-gray-900 hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700  dark:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700'}`}
                                 >
                                     Home
                                 </Link>
@@ -121,19 +121,20 @@ export const Header = () => {
                             <li>
                                 <Link
                                     to="/about"
-                                    className={`block py-2 px-3 rounded md:bg-transparent ${location.pathname === '/about' ? 'bg-blue-700 text-white' : 'text-gray-900 hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:dark:hover:text-blue-500 dark:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700'}`}
+                                    className={`mt-2 block py-2 px-3 rounded md:bg-transparent md:text-blue-700 md:p-0 ${location.pathname === '/about' ? 'bg-blue-700 text-white' : 'text-gray-900 hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700  dark:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700'}`}
                                 >
                                     About
                                 </Link>
                             </li>
                             <li>
-                            {isLoggedIn && (
-                                <Link
-                                    to="/blogs"
-                                    className={`block py-2 px-3 rounded md:bg-transparent ${location.pathname === '/allblogs' ? 'bg-blue-700 text-white' : 'text-gray-900 hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:dark:hover:text-blue-500 dark:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700'}`}
-                                >
-                                    My Blogs
-                                </Link>
+                                {isLoggedIn && (
+                                    <Link
+                                        to="/blogs"
+                                        className={`mt-2 block py-2 px-3 rounded md:bg-transparent md:text-blue-700 md:p-0 ${location.pathname === '/blogs' ? 'bg-blue-700 text-white' : 'text-gray-900 hover:bg-blue-100 md:hover:bg-transparent md:text-blue-700  dark:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700'}`}
+                                    >
+                                        My Blogs
+                                    </Link>
+
                                 )}
                             </li>
                         </ul>
@@ -149,7 +150,7 @@ export const Header = () => {
                                 <div key={blog?.id} className="bg-white rounded-lg shadow-lg">
                                     <img
                                         className="w-full h-60 object-cover rounded-t-lg"
-                                        src={blog.image} 
+                                        src={blog.image}
                                         alt={blog.title}
                                     />
                                     <div className="p-4">
@@ -166,7 +167,7 @@ export const Header = () => {
                 </div>
             ) : null}
         </div>
-        
+
     );
 };
 

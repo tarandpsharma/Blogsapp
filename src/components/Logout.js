@@ -8,11 +8,8 @@ const Logout = () => {
 
     const handleLogout = () => {
         try {
-            // Remove the userData cookie
             Cookies.remove('userData');
-            console.log('User data removed from cookies');
 
-            // Redirect to the login page
             navigate('/login');
         } catch (error) {
             console.error('Error occurred during logout:', error);

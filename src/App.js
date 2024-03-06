@@ -7,6 +7,7 @@ import { Signup } from './components/Signup';
 import { Myblogs } from './components/Myblogs';
 import BlogsPage from './components/BlogsPage';
 import { Profile } from './components/profileUser/Profile';
+import Logout from './components/Logout';
 
 const App = () => {
 
@@ -23,6 +24,7 @@ const App = () => {
           <Route path='/myblogs/*' element={<Myblogs />} />
           <Route path='/blogs' element={<BlogsPage />} />
           <Route path='/profile' element= {<Profile />} />
+          <Route path='/logout' element={<Logout />} />        
         </Routes>
       </BrowserRouter>
     

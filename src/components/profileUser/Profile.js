@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import Header from '../Header';
-import { useSelector, useDispatch } from 'react-redux';
+import { useSelector } from 'react-redux';
 
 export const Profile = () => {
     const { activeUserDetail } = useSelector(state => state.user);
     const [profileImage, setProfileImage] = useState(localStorage.getItem('profileImage') || null);
-    const dispatch = useDispatch();
-
+    const [editableName, setEditableName] = useState(localStorage.getItem('userName') || (activeUserDetail ? activeUserDetail.name : ''));
+    console.log("editnamemmmmmm",editableName)
 
     const handleImageChange = (e) => {
         const file = e.target.files[0];
@@ -25,12 +25,20 @@ export const Profile = () => {
         localStorage.removeItem('profileImage');
     };
 
+    const handleNameChange = (e) => {
+        setEditableName(e.target.value);
+    };
+
+    const handleSaveName = () => {
+        localStorage.setItem('userName', editableName);
+    };
+
     return (
         <>
             <Header />
             <div className="max-w-md mx-auto my-10 mt-28 bg-gray-200 shadow-lg rounded-lg overflow-hidden">
                 <div className="px-4 py-6">
-                    <div className=" ml-36">
+                    <div className="ml-36">
                         {profileImage ? (
                             <>
                                 <img className="h-32 w-32 rounded-full" src={profileImage} alt="User profile" />
@@ -56,7 +64,23 @@ export const Profile = () => {
                             </label>
                         )}
                     </div>
-                    <h1 className="text-3xl font-bold text-center mt-4">{activeUserDetail ? activeUserDetail.name : ""}</h1>
+                    <div className="mt-4">
+                        <label className="text-md font-bold text-gray-600">Name:</label>
+                        <div className="flex items-center">
+                            <input
+                                type="text"
+                                className="mt-1 bg-transparent"
+                                value={editableName}
+                                onChange={handleNameChange}
+                            />
+                            <button
+                                className="ml-2 px-3 mt-1 py-0 font-bold bg-blue-500 text-white rounded-md"
+                                onClick={handleSaveName}
+                            >
+                                Save
+                            </button>
+                        </div>
+                    </div>
                     {activeUserDetail && (
                         <div className="mt-6">
                             <label className="text-md text-gray-600 font-bold">Email:</label>
